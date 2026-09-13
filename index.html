@@ -1,0 +1,439 @@
+DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartu Pertandingan Free Fire</title>
+<style>
+  :root{
+    --void: #0A0910;
+    --panel: #14121E;
+    --panel-soft: #1B1829;
+    --ember: #FF4D1C;
+    --ember-glow: #FF8A3D;
+    --volt: #35F0C9;
+    --chalk: #ECE9F5;
+    --chalk-dim: rgba(236,233,245,0.55);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  @media (prefers-reduced-motion: no-preference){
+    .card{ animation: drop 0.6s cubic-bezier(.2,.8,.2,1) both; }
+  }
+  @keyframes drop{
+    from{ opacity:0; transform: translateY(-14px) scale(0.98); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  body{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 36px 16px;
+    background: var(--void);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .card{
+    width: 100%;
+    max-width: 460px;
+    background: var(--panel);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,77,28,0.18);
+  }
+
+  /* ---- Hero: foto pertandingan ---- */
+  .hero{
+    position: relative;
+    height: 210px;
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+    background: linear-gradient(160deg, #241A33 0%, #14121E 65%, #0A0910 100%);
+  }
+
+  .hero-photo{
+    position:absolute; inset:0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+  }
+
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,138,61,0.30), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(53,240,201,0.15), transparent 50%),
+      linear-gradient(180deg, rgba(10,9,16,0.15) 0%, rgba(10,9,16,0.85) 100%);
+  }
+
+  .hero-tag{
+    position:absolute;
+    top: 18px; left: 20px;
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    color: var(--ember-glow);
+    font-weight: 700;
+    z-index: 2;
+  }
+
+  .hero-mode{
+    position:absolute;
+    bottom: 22px; left: 20px;
+    color: var(--chalk);
+    font-size: 12.5px;
+    font-style: italic;
+    opacity: 0.8;
+    z-index: 2;
+  }
+
+  .hero-badge{
+    position:absolute;
+    top: 16px; right: 18px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--void);
+    background: var(--volt);
+    padding: 5px 10px;
+    border-radius: 3px;
+    z-index: 2;
+  }
+
+  /* ---- Countdown ---- */
+  .countdown-wrap{
+    padding: 20px 20px 4px;
+    margin-top: -18px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .countdown-label{
+    text-align:center;
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    color: var(--chalk-dim);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .countdown{
+    display:flex;
+    justify-content:center;
+    gap: 10px;
+  }
+
+  .cd-box{
+    background: var(--panel-soft);
+    border: 1px solid rgba(255,138,61,0.35);
+    border-radius: 10px;
+    width: 64px;
+    padding: 10px 0 8px;
+    text-align:center;
+    box-shadow: 0 0 16px rgba(255,77,28,0.12) inset;
+  }
+
+  .cd-num{
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--chalk);
+    text-shadow: 0 0 14px rgba(255,138,61,0.5);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cd-unit{
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--chalk-dim);
+    margin-top: 3px;
+  }
+
+  .cd-sep{
+    color: var(--ember);
+    font-size: 22px;
+    font-weight: 700;
+    align-self: center;
+    opacity: 0.6;
+  }
+
+  .countdown.selesai .cd-num{
+    color: var(--volt);
+    text-shadow: 0 0 14px rgba(53,240,201,0.6);
+  }
+
+  /* ---- Matchup ---- */
+  .matchup{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 16px;
+    padding: 22px 20px 6px;
+  }
+
+  .team{
+    flex: 1;
+    text-align: center;
+  }
+
+  .crest{
+    width: 68px; height: 68px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--panel-soft), var(--panel));
+    border: 2px solid rgba(255,138,61,0.4);
+    box-shadow: 0 0 18px rgba(255,77,28,0.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .crest img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .crest-fallback{
+    color: var(--ember-glow);
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .team-name{
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--chalk);
+    line-height: 1.2;
+  }
+
+  .team-tag{
+    font-size: 11px;
+    color: var(--chalk-dim);
+    margin-top: 2px;
+  }
+
+  .versus{
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ember);
+    font-weight: 800;
+    flex-shrink: 0;
+    text-shadow: 0 0 12px rgba(255,77,28,0.6);
+  }
+
+  /* ---- Detail rows ---- */
+  .details{
+    padding: 18px 20px 4px;
+  }
+
+  .row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(236,233,245,0.08);
+    gap: 16px;
+  }
+  .row:last-child{ border-bottom:none; }
+
+  .row-label{
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    color: var(--chalk-dim);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .row-value{
+    font-size: 14px;
+    color: var(--chalk);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .row-value.taruhan{
+    color: var(--ember-glow);
+    background: rgba(255,77,28,0.14);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+  }
+
+  /* ---- Divider ---- */
+  .divider{
+    position: relative;
+    height: 1px;
+    margin: 6px 20px 0;
+    background: linear-gradient(90deg, transparent, rgba(255,138,61,0.35), transparent);
+  }
+
+  /* ---- Keterangan ---- */
+  .keterangan{
+    padding: 18px 20px 6px;
+  }
+
+  .keterangan-label{
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    color: var(--chalk-dim);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .keterangan-text{
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: rgba(236,233,245,0.8);
+  }
+
+  .keterangan-text p + p{
+    margin-top: 10px;
+  }
+
+  /* ---- Footer ---- */
+  .footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 18px 20px 22px;
+  }
+
+  .footer-label{
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    color: rgba(236,233,245,0.35);
+  }
+
+  .footer-code{
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    color: var(--chalk-dim);
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="hero">
+      <img class="hero-photo" src="foto-pertandingan.jpg" alt="Foto pertandingan"
+           onerror="this.style.display='none'">
+      <div class="hero-tag">FOTO PERTANDINGAN</div>
+      <div class="hero-badge">FREE FIRE</div>
+      <div class="hero-mode">Battle Royale · Squad</div>
+    </div>
+
+    <div class="countdown-wrap">
+      <div class="countdown-label">DIMULAI DALAM</div>
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><div class="cd-num" id="cd-hari">00</div><div class="cd-unit">HARI</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-jam">00</div><div class="cd-unit">JAM</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-menit">00</div><div class="cd-unit">MENIT</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><div class="cd-num" id="cd-detik">00</div><div class="cd-unit">DETIK</div></div>
+      </div>
+    </div>
+
+    <div class="matchup">
+      <div class="team">
+        <div class="crest">
+          <img src="foto-tim-1.jpg" alt="Foto Garuda Esports"
+               onerror="this.style.display='none'; this.parentElement.querySelector('.crest-fallback').style.display='block'">
+          <span class="crest-fallback" style="display:none">GFC</span>
+        </div>
+        <div class="team-name">Garuda Esports</div>
+        <div class="team-tag">@garudaesports</div>
+      </div>
+      <div class="versus">VS</div>
+      <div class="team">
+        <div class="crest">
+          <img src="foto-tim-2.jpg" alt="Foto Elang Muda"
+               onerror="this.style.display='none'; this.parentElement.querySelector('.crest-fallback').style.display='block'">
+          <span class="crest-fallback" style="display:none">EM</span>
+        </div>
+        <div class="team-name">Elang Muda</div>
+        <div class="team-tag">@elangmuda.ff</div>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="row">
+        <span class="row-label">JADWAL</span>
+        <span class="row-value">Sabtu, 20 Sep 2026 · 20.00 WIB</span>
+      </div>
+      <div class="row">
+        <span class="row-label">SERVER / MAP</span>
+        <span class="row-value">Indonesia · Bermuda</span>
+      </div>
+      <div class="row">
+        <span class="row-label">KETUA</span>
+        <span class="row-value">Andi Saputra</span>
+      </div>
+      <div class="row">
+        <span class="row-label">TARUHAN</span>
+        <span class="row-value taruhan">Diamond, 100 per tim</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="keterangan">
+      <div class="keterangan-label">KETERANGAN</div>
+      <div class="keterangan-text">
+        <p>Pertandingan ini merupakan laga persahabatan antar dua squad Free Fire yang diadakan untuk mengasah kekompakan tim sekaligus menambah pengalaman bertanding di mode Squad. Kedua tim diharapkan sudah bergabung ke room custom paling lambat 15 menit sebelum jadwal dimulai.</p>
+        <p>Setiap squad wajib hadir dengan formasi lengkap empat pemain dan menggunakan nama in-game yang sudah terdaftar sebelumnya. Room ID dan password akan dibagikan oleh panitia melalui ketua masing-masing tim sesaat sebelum pertandingan dimulai.</p>
+        <p>Taruhan yang disepakati bersifat persahabatan antar sesama pemain dan digunakan untuk menambah keseruan pertandingan. Ketua tim bertanggung jawab penuh untuk memastikan taruhan diserahkan secara jujur sesuai hasil akhir pertandingan.</p>
+        <p>Sistem penilaian mengikuti akumulasi booyah dan jumlah eliminasi selama pertandingan berlangsung. Apabila terjadi kendala teknis seperti lag atau room yang penuh, jadwal dapat disesuaikan kembali melalui kesepakatan kedua ketua tim.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="footer-label">TIKET PERTANDINGAN</span>
+      <span class="footer-code">MATCH #001</span>
+    </div>
+
+  </div>
+
+<script>
+  // Ubah tanggal & jam ini sesuai jadwal pertandingan (format ISO, offset WIB = +07:00)
+  var targetDate = new Date("2026-09-20T20:00:00+07:00").getTime();
+
+  function pad(n){ return String(n).padStart(2, "0"); }
+
+  function updateCountdown(){
+    var now = new Date().getTime();
+    var jarak = targetDate - now;
+    var wrap = document.getElementById("countdown");
+
+    if(jarak <= 0){
+      document.getElementById("cd-hari").textContent = "00";
+      document.getElementById("cd-jam").textContent = "00";
+      document.getElementById("cd-menit").textContent = "00";
+      document.getElementById("cd-detik").textContent = "00";
+      wrap.classList.add("selesai");
+      return;
+    }
+
+    var hari = Math.floor(jarak / (1000 * 60 * 60 * 24));
+    var jam = Math.floor((jarak % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var menit = Math.floor((jarak % (1000 * 60 * 60)) / (1000 * 60));
+    var detik = Math.floor((jarak % (1000 * 60)) / 1000);
+
+    document.getElementById("cd-hari").textContent = pad(hari);
+    document.getElementById("cd-jam").textContent = pad(jam);
+    document.getElementById("cd-menit").textContent = pad(menit);
+    document.getElementById("cd-detik").textContent = pad(detik);
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>
